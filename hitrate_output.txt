@@ -1,0 +1,7 @@
+Simulating page requests across cache capacities...
+
+  capacity=   5  hit rate=16.16%
+  capacity=  10  hit rate=31.57%
+  capacity=  20  hit rate=56.77%
+  capacity=  50  hit rate=81.08%
+  capacity= 100  hit rate=83.37%

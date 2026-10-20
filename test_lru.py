@@ -10,6 +10,8 @@ import unittest
 
 from lru_cache import _MISSING, LRUCache
 
+import random
+import threading
 
 class TestLRUCacheBasics(unittest.TestCase):
     def assert_invariant(self, cache):
@@ -99,6 +101,27 @@ class TestLRUCacheBasics(unittest.TestCase):
         for i in range(7, 10):
             self.assertEqual(cache.get(i), i * 10)
 
+    def test_phase3(self):
+        cache = LRUCache(capacity=10)
+        errors = []
+        def worker():
+            try:
+                for _ in range(20000):
+                    key = random.randint(0, 20)
+                    if random.random() < 0.5:
+                        cache.put(key, key)
+                    else:
+                        cache.get(key)                 
+            except Exception as e:
+                errors.append(e)
+        threads = [threading.Thread(target=worker) for _ in range(8)]
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
+
+        self.assertEqual(errors, [])
+        self.assert_invariant(cache)
 
 if __name__ == "__main__":
     unittest.main()
